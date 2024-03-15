@@ -1,0 +1,44 @@
+//Design Code
+module d_ffpe(output reg q,output wire qbar,input clk,d);
+  always@(posedge clk)
+    begin
+      q=d;
+    end
+  assign qbar=~q;
+endmodule
+
+//Test Bench Code
+module tb();
+  wire q,qbar;
+  reg clk,d;
+  d_ffpe DUT(q,qbar,clk,d);
+  
+  initial
+    begin
+      clk=1'b0;
+      forever #5 clk=~clk;
+    end
+  
+  initial
+    begin
+      d=1'b0;
+      #20;
+      d=1'b1;
+      #20;
+      d=1'b0;
+      #10;
+      $finish;
+    end
+  
+  initial
+    begin
+      $dumpfile("test.vcd");
+      $dumpvars(1);
+    end
+  
+  initial
+    begin
+      $timeformat(-9,0,"ns",10);
+      $monitor("time=%0t,d=%b,q=%b,qbar=%b",$time,d,q,qbar);
+    end
+endmodule
